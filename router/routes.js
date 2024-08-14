@@ -1,5 +1,5 @@
 module.exports = {
-  user: {
-    value: "/users",
+  tasks: {
+    value: "/tasks",
   },
 };
