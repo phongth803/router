@@ -5,9 +5,17 @@ var routerMethods = {
       callback(req, res);
     }
   },
-  post: function (req, res, path, callback) {
+  post: function (req, res, path, array, callback) {
     if (path === req.url && req.method === "POST") {
-      callback(req, res);
+      let isContinute = true;
+      array.forEach((element) => {
+        if (element(req, res) === false) {
+          isContinute = !isContinute;
+        }
+      });
+      if (isContinute) {
+        callback(req, res);
+      }
     }
   },
   delete: function (req, res, path, callback) {
