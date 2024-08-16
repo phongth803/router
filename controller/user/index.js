@@ -8,7 +8,7 @@ async function login(request, response) {
     let user = userList.find((item) => item.username === username && item.password === password)
     
     if(user) {
-        let token = "thisistoken"
+        let token = user.username
         response.writeHead(StatusCode.OK, {"Content-Type": "application/json",});
         response.end(JSON.stringify(token));
     } else {

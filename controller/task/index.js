@@ -19,26 +19,32 @@ function getTaskList(request, response) {
 async function createTask(request, response) {
   try {
     const body = await getBody(request);
-    const { id, name, completed } = JSON.parse(body);
-    if (id === undefined || name === undefined || completed === undefined) {
+    const { name, completed } = JSON.parse(body);
+    if (name === undefined || completed === undefined) {
       response.writeHead(StatusCode.BAD_REQUEST, {
         "Content-Type": "text/plain",
       });
       response.end("Bad request");
     } else {
-      let task = taskList.find((item) => item.id === id || item.name === name);
+      let task = taskList.find((item) => item.name === name);
       if (task) {
         response.writeHead(StatusCode.BAD_REQUEST, {
           "Content-Type": "text/plain",
         });
         response.end("Bad request");
       } else {
-        taskList.push(JSON.parse(body));
+        let newTask = {
+          id: taskList.length + 1,
+          name: name,
+          completed: completed,
+          owner: request.headers["authorization"].split(" ")[1],
+        };
+        taskList.push(newTask);
         writeFile("./data/data.json", JSON.stringify(taskList));
         response.writeHead(StatusCode.CREATED, {
           "Content-Type": "application/json",
         });
-        response.end(JSON.stringify({ id: id }));
+        response.end(JSON.stringify(newTask));
       }
     }
   } catch (error) {

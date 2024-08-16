@@ -1,19 +1,16 @@
 const { StatusCode } = require("../../utils");
-function checkToken(req, res) {
-  if (req.headers["authorization"]) {
-    if (req.headers["authorization"].split(" ")[1] === "thisistoken") {
-      return true;
+const users = require('../../data/user.json')
+function checkToken(req, res, next) {
+    const token = req.headers["authorization"] && req.headers["authorization"].split(" ")[1];
+    const user = users.find((user)=> user.username === token)
+    if (user) {
+      next();
     } else {
       res.writeHead(StatusCode.UNAUTHORIZED, { "Content-Type": "text/plain" });
-      res.end("User khong hop le");
-      return false;
+      res.end("User không hợp lệ");
     }
-  } else {
-    res.writeHead(StatusCode.UNAUTHORIZED, { "Content-Type": "text/plain" });
-    res.end("User khong hop le");
-    return false;
   }
-}
+  
 
 
 module.exports = {
