@@ -1,18 +1,5 @@
 const url = require("url");
-function runMiddleWares(req, res, middlewares) {
-  let index = 0;
-  function next(user) {
-    if (index < middlewares.length - 1) {
-      const middleware = middlewares[index];
-      index++;
-      middleware(req, res, next);
-    } else if (index === middlewares.length - 1) {
-      const controller = middlewares[index];
-      controller(req, res, user);
-    }
-  }
-  next();
-}
+const { runMiddleWares } = require("../middleware");
 
 var routerMethods = {
   get: function (req, res, path, middlewares) {
