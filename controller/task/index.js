@@ -2,24 +2,26 @@ const taskList = require("../../data/data.json");
 const { StatusCode, writeFile, getBody } = require("../../utils.js");
 const fs = require("fs");
 
-function getTaskList(request, response) {
+function getTaskList(request, response, user) {
   const status = request.url.split("?status=")[1] || "all";
+  const myTask = taskList.filter((task) => task.owner === user)
   let statusTaskList = [];
   if (status === "done") {
-    statusTaskList = taskList.filter((item) => item.completed === true);
+    statusTaskList = myTask.filter((item) => item.completed === true);
   } else if (status === "undone") {
-    statusTaskList = taskList.filter((item) => item.completed === false);
+    statusTaskList = myTask.filter((item) => item.completed === false);
   } else if (status === "all") {
-    statusTaskList = taskList;
+    statusTaskList = myTask;
   }
   response.writeHead(StatusCode.OK, { "Content-Type": "application/json" });
   response.end(JSON.stringify(statusTaskList));
 }
 
-async function createTask(request, response) {
+async function createTask(request, response , user) {
   try {
     const body = await getBody(request);
-    const { name, completed } = JSON.parse(body);
+    if (body) {
+      const { name, completed } = JSON.parse(body); 
     if (name === undefined || completed === undefined) {
       response.writeHead(StatusCode.BAD_REQUEST, {
         "Content-Type": "text/plain",
@@ -28,25 +30,26 @@ async function createTask(request, response) {
     } else {
       let task = taskList.find((item) => item.name === name);
       if (task) {
-        response.writeHead(StatusCode.BAD_REQUEST, {
-          "Content-Type": "text/plain",
-        });
+        response.writeHead(StatusCode.BAD_REQUEST, {"Content-Type": "text/plain",});
         response.end("Bad request");
       } else {
         let newTask = {
           id: taskList.length + 1,
           name: name,
           completed: completed,
-          owner: request.headers["authorization"].split(" ")[1],
+          owner: user,
         };
         taskList.push(newTask);
         writeFile("./data/data.json", JSON.stringify(taskList));
-        response.writeHead(StatusCode.CREATED, {
-          "Content-Type": "application/json",
-        });
+        response.writeHead(StatusCode.CREATED, {"Content-Type": "application/json",});
         response.end(JSON.stringify(newTask));
       }
     }
+    } else {
+      response.writeHead(StatusCode.BAD_REQUEST, {"Content-Type": "text/plain",});
+      response.end("No body");
+    }
+    
   } catch (error) {
     if (error) {
       console.error("cant read body", error);
