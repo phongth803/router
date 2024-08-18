@@ -13,7 +13,7 @@ async function login(request, response) {
         response.end(JSON.stringify(token));
     } else {
         response.writeHead(StatusCode.UNAUTHORIZED, { "Content-Type": "text/plain" });
-        response.end("User khong hop le");
+        response.end("User undefined");
     }
     
 }

@@ -2,24 +2,24 @@ const url = require("url");
 const { runMiddleWares } = require("../middleware");
 
 var routerMethods = {
-  get: function (req, res, path, middlewares) {
-    if (path === url.parse(req.url, true).pathname && req.method === "GET") {
-      runMiddleWares(req, res, middlewares);
+  get: function (request, response, path, middlewares) {
+    if (path === url.parse(request.url, true).pathname && request.method === "GET") {
+      runMiddleWares(request, response, middlewares);
     }
   },
-  post: function (req, res, path, middlewares) {
-    if (path === req.url && req.method === "POST") {
-      runMiddleWares(req, res, middlewares);
+  post: function (request, response, path, middlewares) {
+    if (path === request.url && request.method === "POST") {
+      runMiddleWares(request, response, middlewares);
     }
   },
-  delete: function (req, res, path, callback) {
-    if (path === url.parse(req.url, true).pathname && req.method === "DELETE") {
-      callback(req, res);
+  delete: function (request, response, path, callback) {
+    if (path === url.parse(request.url, true).pathname && request.method === "DELETE") {
+      callback(request, response);
     }
   },
-  patch: function (req, res, path, callback) {
-    if (path === url.parse(req.url, true).pathname && req.method === "PATCH") {
-      callback(req, res);
+  patch: function (request, response, path, callback) {
+    if (path === url.parse(request.url, true).pathname && request.method === "PATCH") {
+      callback(request, response);
     }
   },
 };

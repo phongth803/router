@@ -1,8 +1,8 @@
 const router = require("./router/index.js");
 const createServer = require("http").createServer;
 
-const server = createServer((req, res) => {
-  router.run(req, res);
+const server = createServer((request, response) => {
+  router.run(request, response);
 });
 
 // Starts a simple HTTP server locally on port 3000

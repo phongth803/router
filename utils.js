@@ -36,8 +36,17 @@ const StatusCode = Object.freeze({
   INTERNAL_SERVER_ERROR: 500,
   SERVICE_UNAVAILABLE: 503,
 });
+
+const getStatusCondition = Object.freeze({
+  Done: "done",
+  Undone: "undone",
+  All: "all",
+});
+
 module.exports = {
   getBody,
   writeFile,
-  StatusCode
+  StatusCode,
+  getStatusCondition
 };
+
