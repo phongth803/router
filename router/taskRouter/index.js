@@ -3,6 +3,7 @@ const middleware = require("../../middleware/index.js");
 
 var routes = require("../routes.js");
 const { taskController } = require("../../controller/index.js");
+const { handleNotFound } = require("../../controller/task/index.js");
 var userRouter = {
   run(request, response) {
     routerMethods.get(request, response, routes.tasks.value, [
@@ -27,6 +28,7 @@ var userRouter = {
       taskController.updateTask,
       middleware.checkToken
     );
+    handleNotFound(request, response)
   },
 };
 module.exports = userRouter;
